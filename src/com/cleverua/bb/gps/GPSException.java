@@ -8,7 +8,16 @@ public class GPSException extends Exception {
         this.cause = cause;
     }
     
+    public GPSException(String message) {
+        super();
+        this.cause = new Throwable(message);
+    }
+    
     public Throwable getCause() {
         return cause;
+    }
+    
+    public String getMessage() {
+        return cause.getMessage();
     }
 }

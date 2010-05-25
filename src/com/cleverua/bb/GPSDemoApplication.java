@@ -4,42 +4,38 @@ import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.Dialog;
 
 import com.cleverua.bb.gps.GPSException;
-import com.cleverua.bb.gps.GPSLocationListener;
-import com.cleverua.bb.gps.GPSProviderStatus;
-import com.cleverua.bb.gps.ProviderStateListener;
+import com.cleverua.bb.gps.GPSLocator;
 
-public class GPSDemoApplication extends UiApplication implements ProviderStateListener {
+public class GPSDemoApplication extends UiApplication {
     private static GPSDemoApplication instance;
-    private static GPSLocationListener locationListener;
+    private static GPSLocator locationListener;
     
     public static void main(String[] args) {
         instance = new GPSDemoApplication();
-        instance.startGPSLocationUpdate();
+        instance.startGPSListening();
+        instance.pushScreen(new GPSDemoScreen());
         instance.enterEventDispatcher();
     }
     
     public static void exit() {
-        instance.stopGPGLocationUpdate();
-        locationListener.removeProviderStateListener(instance);
+        instance.stopGPSListening();
         System.exit(0);
     }
     
-    private void startGPSLocationUpdate() {
-        GPSProviderStatus status = GPSLocationListener.isGPSAvailable();
-        if (!status.isGPSAvailable()) {
-            alert(status.getStatusMessage());
-        } else {
-            try {
-                locationListener.initLocationListener();
-                locationListener.addProviderStateListener(instance);
-            } catch (GPSException e) {
-                alert("Unable to init GPS!", e);
-            }
+    public static GPSLocator getLocationListener() {
+        return locationListener;
+    }
+
+    private void startGPSListening() {
+        try {
+            locationListener.init(null);
+        } catch (GPSException e) {
+            alert(e.getMessage());
         }
     }
 
-    private void stopGPGLocationUpdate() {
-        locationListener.resetLocationListener();
+    private void stopGPSListening() {
+        locationListener.reset();
     }
     
     public static void alert(final String message) {
@@ -56,12 +52,7 @@ public class GPSDemoApplication extends UiApplication implements ProviderStateLi
         alert(errorMessage.toString());
     }
     
-    public void providerStatusChanged(GPSProviderStatus status) {
-        alert(status.getStatusMessage());
-    }
-    
     private GPSDemoApplication() {
-        locationListener = new GPSLocationListener();
-        locationListener.addProviderStateListener(this);
+        locationListener = new GPSLocator();
     }
 }

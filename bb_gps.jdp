@@ -22,9 +22,8 @@ AutoRestart=0
 ExcludeFromBuildAll=0
 [Files
 src\com\cleverua\bb\gps\GPSException.java
-src\com\cleverua\bb\gps\GPSLocationListener.java
-src\com\cleverua\bb\gps\GPSProviderStatus.java
-src\com\cleverua\bb\gps\ProviderStateListener.java
+src\com\cleverua\bb\gps\GPSLocator.java
+src\com\cleverua\bb\gps\GPSLocatorListener.java
 src\com\cleverua\bb\GPSDemoApplication.java
 src\com\cleverua\bb\GPSDemoScreen.java
 ]
@@ -38,7 +37,7 @@ HaveImports=0
 [Imports
 ]
 Listing=0
-Options=-quiet
+Options=-quiet 
 OutputFileName=bb_gps
 [PackageProtection
 ]
@@ -48,4 +47,5 @@ RibbonPosition=0
 RunOnStartup=0
 StartupTier=7
 SystemModule=0
+Title=BlackBerry GPS Demo
 Type=0
