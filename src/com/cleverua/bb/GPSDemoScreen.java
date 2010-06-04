@@ -9,10 +9,11 @@ import net.rim.device.api.ui.component.ButtonField;
 import net.rim.device.api.ui.component.EditField;
 import net.rim.device.api.ui.container.MainScreen;
 
+import com.cleverua.bb.gps.GPSLocationListener;
 import com.cleverua.bb.gps.GPSLocator;
-import com.cleverua.bb.gps.GPSLocatorListener;
+import com.cleverua.bb.gps.GPSStateListener;
 
-public class GPSDemoScreen extends MainScreen implements GPSLocatorListener {
+public class GPSDemoScreen extends MainScreen implements GPSStateListener, GPSLocationListener {
     private static final String CLOSE_BTN_LABEL  = "OK";
     private static final String GPS_STATUS_LABEL = "GPS Status: ";
     private static final String LOCATION_LABEL   = "GPS Coordinates: ";
@@ -41,14 +42,16 @@ public class GPSDemoScreen extends MainScreen implements GPSLocatorListener {
         });
         setStatus(closeBtn);
        
-        GPSDemoApplication.getInstance().addLocatorListener(this);
+        GPSDemoApplication.getInstance().addGPSStateListener(this);
+        GPSDemoApplication.getInstance().addGPSLocationListener(this);
         
-        locationUpdated(GPSDemoApplication.getInstance().getLocation());
-        stateChanged(GPSDemoApplication.getInstance().getState());
+        gpsLocationUpdated(GPSDemoApplication.getInstance().getLocation());
+        gpsStateChanged(GPSDemoApplication.getInstance().getState());
     }
     
     public void close() {
-        GPSDemoApplication.getInstance().removeLocatorListener(this);
+        GPSDemoApplication.getInstance().removeGPSLocationListener(this);
+        GPSDemoApplication.getInstance().removeGPSStateListener(this);
         super.close();
     }
     
@@ -56,7 +59,7 @@ public class GPSDemoScreen extends MainScreen implements GPSLocatorListener {
         return true;
     }
 
-    public void stateChanged(final int newState) {
+    public void gpsStateChanged(final int newState) {
         UiApplication.getUiApplication().invokeLater(new Runnable() {
             public void run() {
                 gpsStatus.setText(GPSLocator.getStateMessage(newState));
@@ -64,7 +67,7 @@ public class GPSDemoScreen extends MainScreen implements GPSLocatorListener {
         });
     }
 
-    public void locationUpdated(Location newLocation) {
+    public void gpsLocationUpdated(Location newLocation) {
         if (newLocation != null) {
             final StringBuffer sb = new StringBuffer();
             sb.append(newLocation.getQualifiedCoordinates().getLatitude()).append(' ');

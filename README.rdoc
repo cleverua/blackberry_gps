@@ -24,17 +24,22 @@ This sample Blackberry application demonstrates an approach for GPS functionalit
         }
     }  
 
-=== Implement the GPSLocatorListener interface in your classes.
+=== Implement the GPSLocationListener or GPSStateListener interface in your classes.
   
-  public void locationUpdated(Location newLocation) 
+  public void gpsLocationUpdated(Location newLocation) 
 
 Will be called periodically (according to LOCATION_UPDATE_INTERVAL) to provide updates of the current location.
 
-  public void stateChanged(int newState)
+  public void gpsStateChanged(int newState)
 
 Will be called after changes of the locator's state.
   
-=== Use GPSLocator's addLocatorListener() and removeLocatorListener() methods to listen to location updates and location provider's state
+=== Use GPSLocator's methods to add or remove appropriate listeners
+
+* addStateListener(GPSStateListener listener)
+* removeStateListener(GPSStateListener listener)
+* addLocationListener(GPSLocationListener listener)
+* removeLocationListener(GPSLocationListener listener)
 
 == EXAMPLES
 

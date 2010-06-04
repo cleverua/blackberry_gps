@@ -6,8 +6,9 @@ import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.Dialog;
 
 import com.cleverua.bb.gps.GPSException;
+import com.cleverua.bb.gps.GPSLocationListener;
 import com.cleverua.bb.gps.GPSLocator;
-import com.cleverua.bb.gps.GPSLocatorListener;
+import com.cleverua.bb.gps.GPSStateListener;
 
 public class GPSDemoApplication extends UiApplication {
     public static final int LOCATION_UPDATE_TIMEOUT    = 5;
@@ -42,12 +43,20 @@ public class GPSDemoApplication extends UiApplication {
         return gpsLocator.getState();
     }
     
-    public void addLocatorListener(GPSLocatorListener listener) {
-        gpsLocator.addLocatorListener(listener);
+    public void addGPSStateListener(GPSStateListener listener) {
+        gpsLocator.addStateListener(listener);
     }
     
-    public void removeLocatorListener(GPSLocatorListener listener) {
-        gpsLocator.removeLocatorListener(listener);
+    public void removeGPSStateListener(GPSStateListener listener) {
+        gpsLocator.removeStateListener(listener);
+    }
+    
+    public void addGPSLocationListener(GPSLocationListener listener) {
+        gpsLocator.addLocationListener(listener);
+    }
+    
+    public void removeGPSLocationListener(GPSLocationListener listener) {
+        gpsLocator.removeLocationListener(listener);
     }
     
     private void startGPSListening() {

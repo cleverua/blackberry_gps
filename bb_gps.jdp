@@ -22,8 +22,9 @@ AutoRestart=0
 ExcludeFromBuildAll=0
 [Files
 src\com\cleverua\bb\gps\GPSException.java
+src\com\cleverua\bb\gps\GPSLocationListener.java
 src\com\cleverua\bb\gps\GPSLocator.java
-src\com\cleverua\bb\gps\GPSLocatorListener.java
+src\com\cleverua\bb\gps\GPSStateListener.java
 src\com\cleverua\bb\GPSDemoApplication.java
 src\com\cleverua\bb\GPSDemoScreen.java
 ]

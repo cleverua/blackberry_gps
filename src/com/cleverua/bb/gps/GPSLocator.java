@@ -21,7 +21,8 @@ public class GPSLocator {
     private static final String PROVIDER_NULL_MSG                    = "Can not find the location provider that meets the defined criteria!";
     private static final String PROVIDER_UNDEFINED_STATE_MSG         = "Provider state is undefined";
     
-    private Vector providerStateListeners;
+    private Vector stateListeners;
+    private Vector locationListeners;
     private LocationProvider provider;
     private int state;
 
@@ -42,7 +43,8 @@ public class GPSLocator {
     }
     
     public GPSLocator() {
-        providerStateListeners = new Vector();
+        stateListeners = new Vector();
+        locationListeners = new Vector();
     }
     
     /**
@@ -118,39 +120,42 @@ public class GPSLocator {
     }
     
     /**
-     * Adds listener for location updates and location provider's state. 
+     * Adds listener for location provider's state. 
      */
-    public void addLocatorListener(GPSLocatorListener listener) {
-        providerStateListeners.addElement(listener);
+    public void addStateListener(GPSStateListener listener) {
+        stateListeners.addElement(listener);
     }
     
     /**
-     * Removes listener for location updates and location provider's state.
+     * Removes listener for location provider's state.
      */
-    public void removeLocatorListener(GPSLocatorListener listener) {
-        providerStateListeners.removeElement(listener);
+    public void removeStateListener(GPSStateListener listener) {
+        stateListeners.removeElement(listener);
+    }
+    
+    /**
+     * Adds listener for location updates. 
+     */
+    public void addLocationListener(GPSLocationListener listener) {
+        locationListeners.addElement(listener);
+    }
+    
+    /**
+     * Removes listener for location updates.
+     */
+    public void removeLocationListener(GPSLocationListener listener) {
+        locationListeners.removeElement(listener);
     }
     
     private void setState(int state) {
         this.state = state;
     }
     
-    private void updateLocationListeners(Location location) {
-        final int size = providerStateListeners.size();
-        for (int i = 0;  i < size; i++) {
-            ((GPSLocatorListener) providerStateListeners.elementAt(i)).locationUpdated(location);
-        }
-    }
-    
     private LocationListener locationListener = new LocationListener() {
         
         public void providerStateChanged(LocationProvider provider, int state) {
             setState(state);
-            
-            final int size = providerStateListeners.size();
-            for (int i = 0;  i < size; i++) {
-                ((GPSLocatorListener) providerStateListeners.elementAt(i)).stateChanged(state);
-            }
+            updateStateListeners(state);
         }
 
         public void locationUpdated(LocationProvider provider, Location location) {
@@ -163,6 +168,20 @@ public class GPSLocator {
                 updateLocationListeners(location);
             } else {
                 updateLocationListeners(null);
+            }
+        }
+        
+        private void updateStateListeners(int state) {
+            final int size = stateListeners.size();
+            for (int i = 0;  i < size; i++) {
+                ((GPSStateListener) stateListeners.elementAt(i)).gpsStateChanged(state);
+            }
+        }
+        
+        private void updateLocationListeners(Location location) {
+            final int size = stateListeners.size();
+            for (int i = 0;  i < size; i++) {
+                ((GPSLocationListener) stateListeners.elementAt(i)).gpsLocationUpdated(location);
             }
         }
         
