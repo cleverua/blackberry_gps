@@ -11,7 +11,7 @@ import javax.microedition.location.LocationProvider;
 /**
  * Wrapper over the Location Provider
  */
-public class GPSLocator implements LocationListener {
+public class GPSLocator {
     private static final int DEFAULT_TIMEOUT = 5;
     
     private static final String PROVIDER_AVAILABLE_MSG               = "Location provider is available.";
@@ -75,7 +75,7 @@ public class GPSLocator implements LocationListener {
         
         final int providerState = provider.getState();
         if (providerState == LocationProvider.AVAILABLE) {
-            provider.setLocationListener(this, interval, timeout, maxage);
+            provider.setLocationListener(locationListener, interval, timeout, maxage);
         } else {
             throw new GPSException(getStateMessage(providerState));
         }
@@ -131,26 +131,8 @@ public class GPSLocator implements LocationListener {
         providerStateListeners.removeElement(listener);
     }
     
-    public void locationUpdated(LocationProvider provider, Location location) {
-        final int newState = provider.getState();
-        if (newState != state) {
-            providerStateChanged(provider, newState);
-        }
-        
-        if ((newState == LocationProvider.AVAILABLE) && (location.isValid())) {
-            updateLocationListeners(location);
-        } else {
-            updateLocationListeners(null);
-        }
-    }
-
-    public void providerStateChanged(LocationProvider provider, int state) {
+    private void setState(int state) {
         this.state = state;
-        
-        final int size = providerStateListeners.size();
-        for (int i = 0;  i < size; i++) {
-            ((GPSLocatorListener) providerStateListeners.elementAt(i)).stateChanged(state);
-        }
     }
     
     private void updateLocationListeners(Location location) {
@@ -159,5 +141,31 @@ public class GPSLocator implements LocationListener {
             ((GPSLocatorListener) providerStateListeners.elementAt(i)).locationUpdated(location);
         }
     }
+    
+    private LocationListener locationListener = new LocationListener() {
+        
+        public void providerStateChanged(LocationProvider provider, int state) {
+            setState(state);
+            
+            final int size = providerStateListeners.size();
+            for (int i = 0;  i < size; i++) {
+                ((GPSLocatorListener) providerStateListeners.elementAt(i)).stateChanged(state);
+            }
+        }
+
+        public void locationUpdated(LocationProvider provider, Location location) {
+            final int newState = provider.getState();
+            if (newState != state) {
+                providerStateChanged(provider, newState);
+            }
+            
+            if ((newState == LocationProvider.AVAILABLE) && (location.isValid())) {
+                updateLocationListeners(location);
+            } else {
+                updateLocationListeners(null);
+            }
+        }
+        
+    };
     
 }
