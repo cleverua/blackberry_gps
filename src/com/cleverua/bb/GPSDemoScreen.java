@@ -41,14 +41,14 @@ public class GPSDemoScreen extends MainScreen implements GPSLocatorListener {
         });
         setStatus(closeBtn);
         
-        GPSDemoApplication.getGPSLocator().addProviderStateListener(this);
+        GPSDemoApplication.getGPSLocator().addLocatorStateListener(this);
         
         locationUpdated(GPSDemoApplication.getGPSLocator().getLocation());
         stateChanged(GPSDemoApplication.getGPSLocator().getState());
     }
     
     public void close() {
-        GPSDemoApplication.getGPSLocator().removeProviderStateListener(this);
+        GPSDemoApplication.getGPSLocator().removeLocatorStateListener(this);
         super.close();
     }
     
