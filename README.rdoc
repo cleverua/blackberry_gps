@@ -1,22 +1,24 @@
 == DESCRIPTION
 
-This sample Blackberry application demonstrates an approach for GPS location provider usage.
+This sample Blackberry application demonstrates an approach for GPS functionality usage.
 
 == USAGE
 
 === Define the GPSLocator object in your application
 
-  private static GPSLocator gpsLocator;
+  private GPSLocator gpsLocator;
   ...
   gpsLocator = new GPSLocator();
 
-=== Initialize the locator object when it is needed. Pass the required criteria as the parameter. 
+=== Initialize the locator object when it is needed. 
 
-Passing null as the parameter is equal to passing a Criteria that has all fields set to the default values, i.e. the least restrictive set of criteria. 
+  public static final int LOCATION_UPDATE_INTERVAL   = 5;
+  public static final int LOCATION_UPDATE_TIMEOUT    = 5;
+  public static final int LOCATION_UPDATE_MAXAGE     = -1; //use default values
 
   private void startGPSListening() {
         try {
-            gpsLocator.init(null);
+            gpsLocator.init(null, LOCATION_UPDATE_INTERVAL, LOCATION_UPDATE_TIMEOUT, LOCATION_UPDATE_MAXAGE);
         } catch (GPSException e) {
             alert(e.getMessage());
         }
@@ -26,7 +28,7 @@ Passing null as the parameter is equal to passing a Criteria that has all fields
   
   public void locationUpdated(Location newLocation) 
 
-Will be called periodically (each 5 seconds) to provide updates of the current location.
+Will be called periodically (according to LOCATION_UPDATE_INTERVAL) to provide updates of the current location.
 
   public void stateChanged(int newState)
 
@@ -34,25 +36,7 @@ Will be called after changes of the locator's state.
   
 === Use GPSLocator's addLocatorListener() and removeLocatorListener() methods to listen to location updates and location provider's state
 
-  public class GPSDemoScreen extends MainScreen implements GPSLocatorListener {
-    ...
-    public GPSDemoScreen() {
-      ...
-      GPSDemoApplication.getGPSLocator().addLocatorListener(this);
-      ...
-    }
-
-    ...
-
-    public void close() {
-      GPSDemoApplication.getGPSLocator().removeLocatorListener(this);
-      ...
-    }
-
-  }
-
-
 == EXAMPLES
 
-To see an example of GPS location provider usage please launch GPSDemoApplication in your BlackBerry device simulator.
+To see an example please launch GPSDemoApplication in your BlackBerry device simulator.
 

@@ -13,7 +13,7 @@ import com.cleverua.bb.gps.GPSLocator;
 import com.cleverua.bb.gps.GPSLocatorListener;
 
 public class GPSDemoScreen extends MainScreen implements GPSLocatorListener {
-    private static final String CLOSE_BTN_LABEL = "OK";
+    private static final String CLOSE_BTN_LABEL  = "OK";
     private static final String GPS_STATUS_LABEL = "GPS Status: ";
     private static final String LOCATION_LABEL   = "GPS Coordinates: ";
     
@@ -40,15 +40,15 @@ public class GPSDemoScreen extends MainScreen implements GPSLocatorListener {
             }
         });
         setStatus(closeBtn);
+       
+        GPSDemoApplication.getInstance().addLocatorListener(this);
         
-        GPSDemoApplication.getGPSLocator().addLocatorListener(this);
-        
-        locationUpdated(GPSDemoApplication.getGPSLocator().getLocation());
-        stateChanged(GPSDemoApplication.getGPSLocator().getState());
+        locationUpdated(GPSDemoApplication.getInstance().getLocation());
+        stateChanged(GPSDemoApplication.getInstance().getState());
     }
     
     public void close() {
-        GPSDemoApplication.getGPSLocator().removeLocatorListener(this);
+        GPSDemoApplication.getInstance().removeLocatorListener(this);
         super.close();
     }
     

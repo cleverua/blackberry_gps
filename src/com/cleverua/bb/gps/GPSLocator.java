@@ -13,9 +13,6 @@ import javax.microedition.location.LocationProvider;
  */
 public class GPSLocator implements LocationListener {
     private static final int DEFAULT_TIMEOUT = 5;
-    public static final int LOCATION_PROVIDER_UPDATE_TIMEOUT    = 5;
-    public static final int LOCATION_PROVIDER_UPDATE_INTERVAL   = 5;
-    public static final int LOCATION_PROVIDER_UPDATE_MAXAGE     = -1; // default value
     
     private static final String PROVIDER_AVAILABLE_MSG               = "Location provider is available.";
     private static final String LOCATION_EXCEPTOIN_MSG               = "All location providers are currently permanently unavailable!";
@@ -51,10 +48,19 @@ public class GPSLocator implements LocationListener {
     /**
      * Initialize the GPS locator.
      * @param criteria - GPS criteria for initialization.
+     * @param interval - the interval in seconds. 
+     * -1 is used for the default interval of this provider. 
+     * 0 is used to indicate that the application wants to receive 
+     * only provider status updates and not location updates at all.
+     * @param timeout - timeout value in seconds, must be greater than 0. 
+     * If the value is -1, the default timeout for this provider is used.
+     * @param maxage - maximum age of the returned location in seconds, 
+     * must be greater than 0 or equal to -1 to indicate that the default 
+     * maximum age for this provider is used.
      * @throws GPSException if GPS provider is unavailable 
      * or there are no providers can meet the given criteria. 
      */
-    public void init(Criteria criteria) throws GPSException {
+    public void init(Criteria criteria, int interval, int timeout, int maxage) throws GPSException {
         try {
             provider = LocationProvider.getInstance(criteria);
         } catch (LocationException e) {
@@ -69,10 +75,7 @@ public class GPSLocator implements LocationListener {
         
         final int providerState = provider.getState();
         if (providerState == LocationProvider.AVAILABLE) {
-            provider.setLocationListener(this,
-                    LOCATION_PROVIDER_UPDATE_INTERVAL,
-                    LOCATION_PROVIDER_UPDATE_TIMEOUT,
-                    LOCATION_PROVIDER_UPDATE_MAXAGE);
+            provider.setLocationListener(this, interval, timeout, maxage);
         } else {
             throw new GPSException(getStateMessage(providerState));
         }
