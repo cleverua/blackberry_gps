@@ -34,18 +34,21 @@ public class GPSDemoScreen extends MainScreen implements GPSLocatorListener {
         
         ButtonField closeBtn = new ButtonField(CLOSE_BTN_LABEL, FIELD_HCENTER);
         closeBtn.setChangeListener(new FieldChangeListener() {
-            public void fieldChanged(Field arg0, int arg1) {
+            public void fieldChanged(Field field, int context) {
                 close();
                 
             }
         });
         setStatus(closeBtn);
         
-        GPSDemoApplication.getLocationListener().addProviderStateListener(this);
+        GPSDemoApplication.getGPSLocator().addProviderStateListener(this);
+        
+        locationUpdated(GPSDemoApplication.getGPSLocator().getLocation());
+        stateChanged(GPSDemoApplication.getGPSLocator().getState());
     }
     
     public void close() {
-        GPSDemoApplication.getLocationListener().removeProviderStateListener(this);
+        GPSDemoApplication.getGPSLocator().removeProviderStateListener(this);
         super.close();
     }
     

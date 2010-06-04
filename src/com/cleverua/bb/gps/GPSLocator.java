@@ -8,7 +8,11 @@ import javax.microedition.location.LocationException;
 import javax.microedition.location.LocationListener;
 import javax.microedition.location.LocationProvider;
 
+/**
+ * Wrapper over the Location Provider
+ */
 public class GPSLocator implements LocationListener {
+    private static final int DEFAULT_TIMEOUT = 5;
     public static final int LOCATION_PROVIDER_UPDATE_TIMEOUT    = 5;
     public static final int LOCATION_PROVIDER_UPDATE_INTERVAL   = 5;
     public static final int LOCATION_PROVIDER_UPDATE_MAXAGE     = -1; // default value
@@ -18,12 +22,15 @@ public class GPSLocator implements LocationListener {
     private static final String PROVIDER_TEMPORARILY_UNAVAILABLE_MSG = "Location provider is temporarily unavailable!";
     private static final String PROVIDER_OUT_OF_SERVICE_MSG          = "The location provider is permanently unavailable!";
     private static final String PROVIDER_NULL_MSG                    = "Can not find the location provider that meets the defined criteria!";
-    private static final String PROVIDER_UNKNOWN_STATE_MSG           = "Unknown provider state";
+    private static final String PROVIDER_UNDEFINED_STATE_MSG         = "Provider state is undefined";
     
     private Vector providerStateListeners;
     private LocationProvider provider;
     private int state;
 
+    /**
+     * Returns the locator's message for the location provider's state.
+     */
     public static String getStateMessage(int state) {
         switch (state) {
             case LocationProvider.OUT_OF_SERVICE: 
@@ -33,7 +40,7 @@ public class GPSLocator implements LocationListener {
             case LocationProvider.AVAILABLE: 
                 return PROVIDER_AVAILABLE_MSG;
             default: 
-                return PROVIDER_UNKNOWN_STATE_MSG;
+                return PROVIDER_UNDEFINED_STATE_MSG;
         }
     }
     
@@ -41,6 +48,12 @@ public class GPSLocator implements LocationListener {
         providerStateListeners = new Vector();
     }
     
+    /**
+     * Initialize the GPS locator.
+     * @param criteria - GPS criteria for initialization.
+     * @throws GPSException if GPS provider is unavailable 
+     * or there are no providers can meet the given criteria. 
+     */
     public void init(Criteria criteria) throws GPSException {
         try {
             provider = LocationProvider.getInstance(criteria);
@@ -65,6 +78,9 @@ public class GPSLocator implements LocationListener {
         }
     }
     
+    /**
+     * Resets the GPS locator
+     */
     public void reset() {
         if (provider != null) {
             provider.reset();
@@ -72,10 +88,42 @@ public class GPSLocator implements LocationListener {
         }
     }
     
+    /**
+     * Returns the current state of the locator
+     */
+    public int getState() {
+        if (provider != null) {
+            return provider.getState();
+        } else {
+            return -1;
+        }
+    }
+    
+    /**
+     * Retrieves a Location with the constraints given by the Criteria associated with this class.
+     * @return Location object or null if no result could be retrieved.
+     */
+    public Location getLocation() {
+        if (provider != null) {
+            try {
+                return provider.getLocation(DEFAULT_TIMEOUT);
+            } catch (Exception e) {
+                // suppose location to be null
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Adds listener for location updates and location provider's state. 
+     */
     public void addProviderStateListener(GPSLocatorListener listener) {
         providerStateListeners.addElement(listener);
     }
     
+    /**
+     * Removes listener for location updates and location provider's state.
+     */
     public void removeProviderStateListener(GPSLocatorListener listener) {
         providerStateListeners.removeElement(listener);
     }

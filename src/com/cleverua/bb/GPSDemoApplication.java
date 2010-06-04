@@ -8,7 +8,7 @@ import com.cleverua.bb.gps.GPSLocator;
 
 public class GPSDemoApplication extends UiApplication {
     private static GPSDemoApplication instance;
-    private static GPSLocator locationListener;
+    private static GPSLocator gpsLocator;
     
     public static void main(String[] args) {
         instance = new GPSDemoApplication();
@@ -22,20 +22,20 @@ public class GPSDemoApplication extends UiApplication {
         System.exit(0);
     }
     
-    public static GPSLocator getLocationListener() {
-        return locationListener;
+    public static GPSLocator getGPSLocator() {
+        return gpsLocator;
     }
 
     private void startGPSListening() {
         try {
-            locationListener.init(null);
+            gpsLocator.init(null);
         } catch (GPSException e) {
             alert(e.getMessage());
         }
     }
 
     private void stopGPSListening() {
-        locationListener.reset();
+        gpsLocator.reset();
     }
     
     public static void alert(final String message) {
@@ -53,6 +53,6 @@ public class GPSDemoApplication extends UiApplication {
     }
     
     private GPSDemoApplication() {
-        locationListener = new GPSLocator();
+        gpsLocator = new GPSLocator();
     }
 }
