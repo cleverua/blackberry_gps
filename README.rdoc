@@ -22,7 +22,7 @@ Passing null as the parameter is equal to passing a Criteria that has all fields
         }
     }  
 
-=== Implement the GPSLocatorListener interface in one of your classes.
+=== Implement the GPSLocatorListener interface in your classes.
   
   public void locationUpdated(Location newLocation) 
 
@@ -32,20 +32,20 @@ Will be called periodically (each 5 seconds) to provide updates of the current l
 
 Will be called after changes of the locator's state.
   
-=== Use GPSLocator's addLocatorStateListener() and removeLocatorStateListener() methods to listen to location updates and location provider's state
+=== Use GPSLocator's addLocatorListener() and removeLocatorListener() methods to listen to location updates and location provider's state
 
   public class GPSDemoScreen extends MainScreen implements GPSLocatorListener {
     ...
     public GPSDemoScreen() {
       ...
-      GPSDemoApplication.getGPSLocator().addLocatorStateListener(this);
+      GPSDemoApplication.getGPSLocator().addLocatorListener(this);
       ...
     }
 
     ...
 
     public void close() {
-      GPSDemoApplication.getGPSLocator().removeLocatorStateListener(this);
+      GPSDemoApplication.getGPSLocator().removeLocatorListener(this);
       ...
     }
 

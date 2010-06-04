@@ -117,14 +117,14 @@ public class GPSLocator implements LocationListener {
     /**
      * Adds listener for location updates and location provider's state. 
      */
-    public void addLocatorStateListener(GPSLocatorListener listener) {
+    public void addLocatorListener(GPSLocatorListener listener) {
         providerStateListeners.addElement(listener);
     }
     
     /**
      * Removes listener for location updates and location provider's state.
      */
-    public void removeLocatorStateListener(GPSLocatorListener listener) {
+    public void removeLocatorListener(GPSLocatorListener listener) {
         providerStateListeners.removeElement(listener);
     }
     
