@@ -11,9 +11,10 @@ import com.cleverua.bb.gps.GPSLocator;
 import com.cleverua.bb.gps.GPSStateListener;
 
 public class GPSDemoApplication extends UiApplication {
-    public static final int LOCATION_UPDATE_TIMEOUT    = 5;
-    public static final int LOCATION_UPDATE_INTERVAL   = 5;
-    public static final int LOCATION_UPDATE_MAXAGE     = -1; //use default values
+    private static final int LOCATION_UPDATE_TIMEOUT    = 5;
+    private static final int LOCATION_UPDATE_INTERVAL   = 5;
+    private static final int LOCATION_UPDATE_MAXAGE     = -1; //use default values
+    private static final int LOCATION_DEFAULT_TIMEOUT   = 5;
     
     private static GPSDemoApplication instance;
     
@@ -36,7 +37,7 @@ public class GPSDemoApplication extends UiApplication {
     }
 
     public Location getLocation() {
-        return gpsLocator.getLocation();
+        return gpsLocator.getLocation(LOCATION_DEFAULT_TIMEOUT);
     }
 
     public int getState() {

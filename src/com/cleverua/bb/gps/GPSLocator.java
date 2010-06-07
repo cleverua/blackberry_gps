@@ -12,8 +12,6 @@ import javax.microedition.location.LocationProvider;
  * Wrapper over the Location Provider
  */
 public class GPSLocator {
-    private static final int DEFAULT_TIMEOUT = 5;
-    
     private static final String PROVIDER_AVAILABLE_MSG               = "Location provider is available.";
     private static final String LOCATION_EXCEPTOIN_MSG               = "All location providers are currently permanently unavailable!";
     private static final String PROVIDER_TEMPORARILY_UNAVAILABLE_MSG = "Location provider is temporarily unavailable!";
@@ -106,12 +104,15 @@ public class GPSLocator {
     
     /**
      * Retrieves a Location with the constraints given by the Criteria associated with this class.
+     * Do not call this method from the event thread.
+     * @param timeOut - a timeout value in seconds. 
+     * -1 is used to indicate that the implementation should use its default timeout value for this provider.
      * @return Location object or null if no result could be retrieved.
      */
-    public Location getLocation() {
+    public Location getLocation(int timeOut) {
         if (provider != null) {
             try {
-                return provider.getLocation(DEFAULT_TIMEOUT);
+                return provider.getLocation(timeOut);
             } catch (Exception e) {
                 // suppose location to be null
             }
@@ -179,9 +180,9 @@ public class GPSLocator {
         }
         
         private void updateLocationListeners(Location location) {
-            final int size = stateListeners.size();
+            final int size = locationListeners.size();
             for (int i = 0;  i < size; i++) {
-                ((GPSLocationListener) stateListeners.elementAt(i)).gpsLocationUpdated(location);
+                ((GPSLocationListener) locationListeners.elementAt(i)).gpsLocationUpdated(location);
             }
         }
         
