@@ -70,6 +70,9 @@ public class GPSLocator {
         }
         
         if (provider == null) {
+            // This is what we get on Curve 8320 simulator, that does not have built-in GPS module.
+            // Also we get this if user disabled the GPS via device settings.
+            // So looks like there's no possibility to differentiate between those two cases.
             throw new GPSException(PROVIDER_NULL_MSG);
         }
         
